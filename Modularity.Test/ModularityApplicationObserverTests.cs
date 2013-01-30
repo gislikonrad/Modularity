@@ -6,36 +6,39 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Web;
 using System.Collections.Concurrent;
 using Moq;
+using Modularity.Test.Stubs;
+using System.Collections.Specialized;
 
 namespace Modularity.Test
 {
     [TestClass]
     public class ModularityApplicationObserverTests
     {
-        private Module _module;
-        private Mock<Module> _moduleMock;
+        private ModularityModule _module;
+        private Mock<ModularityModule> _moduleMock;
         private int _counter;
         private ModularityApplicationObserver _observer;
 
         [TestInitialize]
         public void Init()
         {
-            _moduleMock = new Mock<Module>();
+            _moduleMock = new Mock<ModularityModule>();
             _module = _moduleMock.Object;
             _counter = 0;
             ModularityApplicationObserver.GetContext = () => new Mock<HttpContextBase>().Object;
-            ModularityApplicationObserver.Modules.Add(_module);
+            ModularityApplicationObserver.Modules.Enqueue(_module);
             _observer = new ModularityApplicationObserver();
         }
 
         [TestCleanup]
         public void CleanUp()
         {
-            var module = null as Module;
+            var module = null as ModularityModule;
             while (ModularityApplicationObserver.Modules.Any())
             {
-                ModularityApplicationObserver.Modules.TryTake(out module);
+                ModularityApplicationObserver.Modules.TryDequeue(out module);
             }
+            MethodHandler.ClearHandlers();
         }
 
         [TestMethod]
@@ -49,14 +52,14 @@ namespace Modularity.Test
         public void ShouldCallModuleEvent()
         {
             _module.OnBeginRequest += (o, e) => _counter++;
-            _observer.FireEvent(m => m.OnBeginRequest);
+            _observer.FireSynchronousEvent(m => m.OnBeginRequest);
             Assert.AreEqual(1, _counter);
         }
 
         [TestMethod]
         public void ShouldNotCallModuleOnBeginRequestIfNotSubscribed()
         {
-            _observer.FireEvent(m => m.OnBeginRequest);
+            _observer.FireSynchronousEvent(m => m.OnBeginRequest);
             Assert.AreEqual(0, _counter);
         }
 
@@ -66,7 +69,17 @@ namespace Modularity.Test
             ModularityApplicationObserver.AddConfiguredModules();
             Assert.IsTrue(ModularityApplicationObserver.Modules.Any(m => m.GetType() == typeof(ModuleStub)));
         }
-    }
 
-    public class ModuleStub : Module { }
+        [TestMethod]
+        public void ShouldStartModules()
+        {
+			var applicationModules = new IHttpModule[]
+			{
+				new ModularityApplicationObserver(),
+				new ModularityAsyncApplicationObserver()
+			};
+			_observer.InitializeModules(applicationModules);
+            _moduleMock.Verify(m => m.Initialize());
+        }
+    }
 }

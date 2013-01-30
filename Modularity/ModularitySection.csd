@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<configurationSectionModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="c9f3c23b-b904-4f1e-8960-f3639aaad252" namespace="Modularity" xmlSchemaNamespace="urn:Modularity" assemblyName="Modularity" xmlns="http://schemas.microsoft.com/dsltools/ConfigurationSectionDesigner">
+<configurationSectionModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="c9f3c23b-b904-4f1e-8960-f3639aaad252" namespace="Modularity" xmlSchemaNamespace="urn:Modularity" xmlns="http://schemas.microsoft.com/dsltools/ConfigurationSectionDesigner">
   <typeDefinitions>
     <externalType name="String" namespace="System" />
     <externalType name="Boolean" namespace="System" />

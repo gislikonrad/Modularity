@@ -8,77 +8,45 @@ using System.Web.SessionState;
 
 namespace Modularity
 {
-    public class ModularityApplicationObserver : IHttpModule
+    public class ModularityApplicationObserver : ModularityApplicationObserverBase
     {
-        internal static readonly ConcurrentBag<Module> Modules;
-        internal static Func<HttpContextBase> GetContext;
-
-        static ModularityApplicationObserver()
+        internal override void InitializeEvents(HttpApplication context)
         {
-            Modules = new ConcurrentBag<Module>();
-            AddConfiguredModules();
-            GetContext = () => new HttpContextWrapper(HttpContext.Current);
-        }
-
-        public void Init(HttpApplication context)
-        {
-            context.AcquireRequestState += (o, e) => FireEvent(m => m.OnAcquireRequestState);
-            context.AuthenticateRequest += (o, e) => FireEvent(m => m.OnAuthenticateRequest);
-            context.AuthorizeRequest += (o, e) => FireEvent(m => m.OnAuthorizeRequest);
-            context.BeginRequest += (o, e) => FireEvent(m => m.OnBeginRequest);
-            context.Disposed += (o, e) => FireEvent(m => m.OnDisposed);
-            context.EndRequest += (o, e) => FireEvent(m => m.OnEndRequest);
-            context.Error += (o, e) => FireEvent(m => m.OnError);
-            context.LogRequest += (o, e) => FireEvent(m => m.OnLogRequest);
-            context.MapRequestHandler += (o, e) => FireEvent(m => m.OnMapRequestHandler);
-            context.PostAcquireRequestState += (o, e) => FireEvent(m => m.OnPostAcquireRequestState);
-            context.PostAuthenticateRequest += (o, e) => FireEvent(m => m.OnPostAuthenticateRequest);
-            context.PostAuthorizeRequest += (o, e) => FireEvent(m => m.OnPostAuthorizeRequest);
-            context.PostLogRequest += (o, e) => FireEvent(m => m.OnPostLogRequest);
-            context.PostMapRequestHandler += (o, e) => FireEvent(m => m.OnPostMapRequestHandler);
-            context.PostReleaseRequestState += (o, e) => FireEvent(m => m.OnPostReleaseRequestState);
-            context.PostRequestHandlerExecute += (o, e) => FireEvent(m => m.OnPostRequestHandlerExecute);
-            context.PostResolveRequestCache += (o, e) => FireEvent(m => m.OnPostResolveRequestCache);
-            context.PostUpdateRequestCache += (o, e) => FireEvent(m => m.OnPostUpdateRequestCache);
-            context.PreRequestHandlerExecute += (o, e) => FireEvent(m => m.OnPreRequestHandlerExecute);
-            context.PreSendRequestContent += (o, e) => FireEvent(m => m.OnPreSendRequestContent);
-            context.PreSendRequestHeaders += (o, e) => FireEvent(m => m.OnPreSendRequestHeaders);
-            context.ReleaseRequestState += (o, e) => FireEvent(m => m.OnReleaseRequestState);
-            context.ResolveRequestCache += (o, e) => FireEvent(m => m.OnResolveRequestCache);
-            context.UpdateRequestCache += (o, e) => FireEvent(m => m.OnUpdateRequestCache);
+            context.AcquireRequestState += (o, e) => FireSynchronousEvent(m => m.OnAcquireRequestState);
+            context.AuthenticateRequest += (o, e) => FireSynchronousEvent(m => m.OnAuthenticateRequest);
+            context.AuthorizeRequest += (o, e) => FireSynchronousEvent(m => m.OnAuthorizeRequest);
+            context.BeginRequest += (o, e) => FireSynchronousEvent(m => m.OnBeginRequest);
+            context.Disposed += (o, e) => FireSynchronousEvent(m => m.OnDisposed);
+            context.EndRequest += (o, e) => FireSynchronousEvent(m => m.OnEndRequest);
+            context.Error += (o, e) => FireSynchronousEvent(m => m.OnError);
+            context.LogRequest += (o, e) => FireSynchronousEvent(m => m.OnLogRequest);
+            context.MapRequestHandler += (o, e) => FireSynchronousEvent(m => m.OnMapRequestHandler);
+            context.PostAcquireRequestState += (o, e) => FireSynchronousEvent(m => m.OnPostAcquireRequestState);
+            context.PostAuthenticateRequest += (o, e) => FireSynchronousEvent(m => m.OnPostAuthenticateRequest);
+            context.PostAuthorizeRequest += (o, e) => FireSynchronousEvent(m => m.OnPostAuthorizeRequest);
+            context.PostLogRequest += (o, e) => FireSynchronousEvent(m => m.OnPostLogRequest);
+            context.PostMapRequestHandler += (o, e) => FireSynchronousEvent(m => m.OnPostMapRequestHandler);
+            context.PostReleaseRequestState += (o, e) => FireSynchronousEvent(m => m.OnPostReleaseRequestState);
+            context.PostRequestHandlerExecute += (o, e) => FireSynchronousEvent(m => m.OnPostRequestHandlerExecute);
+            context.PostResolveRequestCache += (o, e) => FireSynchronousEvent(m => m.OnPostResolveRequestCache);
+            context.PostUpdateRequestCache += (o, e) => FireSynchronousEvent(m => m.OnPostUpdateRequestCache);
+            context.PreRequestHandlerExecute += (o, e) => FireSynchronousEvent(m => m.OnPreRequestHandlerExecute);
+            context.PreSendRequestContent += (o, e) => FireSynchronousEvent(m => m.OnPreSendRequestContent);
+            context.PreSendRequestHeaders += (o, e) => FireSynchronousEvent(m => m.OnPreSendRequestHeaders);
+            context.ReleaseRequestState += (o, e) => FireSynchronousEvent(m => m.OnReleaseRequestState);
+            context.ResolveRequestCache += (o, e) => FireSynchronousEvent(m => m.OnResolveRequestCache);
+            context.UpdateRequestCache += (o, e) => FireSynchronousEvent(m => m.OnUpdateRequestCache);
 
             var session = context.Modules["Session"] as SessionStateModule;
             if (session != null)
             {
-                session.Start += (o, e) => FireEvent(m => m.OnSessionStart);
-                session.End += (o, e) => FireEvent(m => m.OnSessionEnd);
+                session.Start += (o, e) => FireSynchronousEvent(m => m.OnSessionStart);
+                session.End += (o, e) => FireSynchronousEvent(m => m.OnSessionEnd);
             }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
-        }
-
-        internal void FireEvent(Func<Module, RequestEventHandler> getEvent)
-        {
-            foreach (var eventToFire in Modules.Select(m => getEvent(m)).Where(e => e != null))
-            {
-                eventToFire(this, new RequestEventArgs(GetContext()));
-            }
-        }
-
-        internal static void AddConfiguredModules()
-        {
-            if (ModularitySection.Instance != null)
-            {
-                foreach (ModuleElement element in ModularitySection.Instance.CustomModules)
-                {
-                    var type = Type.GetType(element.Type);
-                    var module = Activator.CreateInstance(type) as Module;
-                    if (module == null) throw new ApplicationException(string.Format("Unable to add {0}. Does it inherit the abstract class Modularity.Module?", element.Type));
-                    Modules.Add(module);
-                }
-            }
         }
     }
 }
