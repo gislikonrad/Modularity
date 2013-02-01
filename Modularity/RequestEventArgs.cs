@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Modularity
 {
-    public class RequestEventArgs
+    public class RequestEventArgs : EventArgs
     {        
         public RequestEventArgs(HttpContextBase context)
         {

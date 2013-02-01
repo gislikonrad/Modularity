@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ErrorRequestEventArgs.cs" />
     <Compile Include="ModularityApplicationObserver.cs" />
     <Compile Include="ModularityApplicationObserverBase.cs" />
     <Compile Include="ModularityAsyncApplicationObserver.cs" />

@@ -52,14 +52,14 @@ namespace Modularity.Test
         public void ShouldCallModuleEvent()
         {
             _module.OnBeginRequest += (o, e) => _counter++;
-            _observer.FireSynchronousEvent(m => m.OnBeginRequest);
+            _observer.FireEventSynchronously(m => m.OnBeginRequest);
             Assert.AreEqual(1, _counter);
         }
 
         [TestMethod]
         public void ShouldNotCallModuleOnBeginRequestIfNotSubscribed()
         {
-            _observer.FireSynchronousEvent(m => m.OnBeginRequest);
+            _observer.FireEventSynchronously(m => m.OnBeginRequest);
             Assert.AreEqual(0, _counter);
         }
 

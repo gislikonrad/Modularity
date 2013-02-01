@@ -26,6 +26,7 @@ namespace Modularity
             InitializeEvents(context);
         }
 
+		protected abstract bool IsAsync { get; }
         internal abstract void InitializeEvents(HttpApplication context);
         public abstract void Dispose();
 
@@ -55,13 +56,35 @@ namespace Modularity
             }
         }
 
-        internal void FireSynchronousEvent(Func<ModularityModule, RequestEventHandler> getEvent)
+		internal void FireEventSynchronously(Func<ModularityModule, RequestEventHandler<RequestEventArgs>> getEvent)
 		{
-			foreach (var handler in Modules.Where(m => !m.IsAsync).Select(m => getEvent(m)).Where(e => e != null))
+			var context = GetContext();
+			FireEventSynchronously<RequestEventArgs>(getEvent, () => new RequestEventArgs(context));
+		}
+
+		internal void FireEventSynchronously(Func<ModularityModule, RequestEventHandler<EventArgs>> getEvent)
+		{
+			FireEventSynchronously<EventArgs>(getEvent, () => EventArgs.Empty);
+		}
+
+		internal void FireEventSynchronously(Func<ModularityModule, RequestEventHandler<ErrorRequestEventArgs>> getEvent)
+		{
+			var context = GetContext();
+			var exception = context.Server.GetLastError();
+			context.Server.ClearError();
+			FireEventSynchronously<ErrorRequestEventArgs>(getEvent, () => new ErrorRequestEventArgs(exception, context));
+		}
+
+		private void FireEventSynchronously<TEventArgs>(Func<ModularityModule, RequestEventHandler<TEventArgs>> getEvent, Func<TEventArgs> getArgs)
+			where TEventArgs : EventArgs
+		{
+			foreach (var handler in Modules.Where(m => m.IsAsync == IsAsync).Select(m => getEvent(m)).Where(e => e != null))
 			{
-				handler(this, new RequestEventArgs(GetContext()));
+				var sender = this;
+				var args = getArgs();
+				handler(sender, args);
 			}
-        }
+		}
 
 		private static void AssertObserversLoaded(IEnumerable<IHttpModule> applicationModules)
 		{			

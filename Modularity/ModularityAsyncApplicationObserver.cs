@@ -11,42 +11,43 @@ namespace Modularity
 {
 	// TODO: Finish this
     public class ModularityAsyncApplicationObserver : ModularityApplicationObserverBase
-    {
+	{
+		protected override bool IsAsync { get { return true; } }
         internal override void InitializeEvents(HttpApplication context)
         {
             // Async events
-            AddAsyncEventHandlers(context.AddOnAcquireRequestStateAsync, m => m.OnAcquireRequestState);
-            AddAsyncEventHandlers(context.AddOnAuthenticateRequestAsync, m => m.OnAuthenticateRequest);
-            AddAsyncEventHandlers(context.AddOnAuthorizeRequestAsync, m => m.OnAuthorizeRequest);
-            AddAsyncEventHandlers(context.AddOnBeginRequestAsync, m => m.OnBeginRequest);
-            AddAsyncEventHandlers(context.AddOnEndRequestAsync, m => m.OnEndRequest);
-            AddAsyncEventHandlers(context.AddOnLogRequestAsync, m => m.OnLogRequest);
-            AddAsyncEventHandlers(context.AddOnMapRequestHandlerAsync, m => m.OnMapRequestHandler);
-            AddAsyncEventHandlers(context.AddOnPostAcquireRequestStateAsync, m => m.OnPostAcquireRequestState);
-            AddAsyncEventHandlers(context.AddOnPostAuthenticateRequestAsync, m => m.OnPostAuthenticateRequest);
-            AddAsyncEventHandlers(context.AddOnPostAuthorizeRequestAsync, m => m.OnPostAuthorizeRequest);
-            AddAsyncEventHandlers(context.AddOnPostLogRequestAsync, m => m.OnPostLogRequest);
-            AddAsyncEventHandlers(context.AddOnPostMapRequestHandlerAsync, m => m.OnPostMapRequestHandler);
-            AddAsyncEventHandlers(context.AddOnPostReleaseRequestStateAsync, m => m.OnPostReleaseRequestState);
-            AddAsyncEventHandlers(context.AddOnPostRequestHandlerExecuteAsync, m => m.OnPostRequestHandlerExecute);
-            AddAsyncEventHandlers(context.AddOnPostResolveRequestCacheAsync, m => m.OnPostResolveRequestCache);
-            AddAsyncEventHandlers(context.AddOnPostUpdateRequestCacheAsync, m => m.OnPostUpdateRequestCache);
-            AddAsyncEventHandlers(context.AddOnPreRequestHandlerExecuteAsync, m => m.OnPreRequestHandlerExecute);
-            AddAsyncEventHandlers(context.AddOnReleaseRequestStateAsync, m => m.OnReleaseRequestState);
-            AddAsyncEventHandlers(context.AddOnResolveRequestCacheAsync, m => m.OnResolveRequestCache);
-            AddAsyncEventHandlers(context.AddOnUpdateRequestCacheAsync, m => m.OnUpdateRequestCache);
+            AddAsyncEventHandlers(context.AddOnAcquireRequestStateAsync, m => m.OnAcquireRequestState, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnAuthenticateRequestAsync, m => m.OnAuthenticateRequest, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnAuthorizeRequestAsync, m => m.OnAuthorizeRequest, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnBeginRequestAsync, m => m.OnBeginRequest, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnEndRequestAsync, m => m.OnEndRequest, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnLogRequestAsync, m => m.OnLogRequest, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnMapRequestHandlerAsync, m => m.OnMapRequestHandler, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnPostAcquireRequestStateAsync, m => m.OnPostAcquireRequestState, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnPostAuthenticateRequestAsync, m => m.OnPostAuthenticateRequest, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnPostAuthorizeRequestAsync, m => m.OnPostAuthorizeRequest, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnPostLogRequestAsync, m => m.OnPostLogRequest, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnPostMapRequestHandlerAsync, m => m.OnPostMapRequestHandler, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnPostReleaseRequestStateAsync, m => m.OnPostReleaseRequestState, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnPostRequestHandlerExecuteAsync, m => m.OnPostRequestHandlerExecute, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnPostResolveRequestCacheAsync, m => m.OnPostResolveRequestCache, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnPostUpdateRequestCacheAsync, m => m.OnPostUpdateRequestCache, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnPreRequestHandlerExecuteAsync, m => m.OnPreRequestHandlerExecute, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnReleaseRequestStateAsync, m => m.OnReleaseRequestState, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnResolveRequestCacheAsync, m => m.OnResolveRequestCache, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnUpdateRequestCacheAsync, m => m.OnUpdateRequestCache, () => new RequestEventArgs(GetContext()));
             
             // Synchronous only events
-            context.Disposed += (o, e) => FireSynchronousEvent(m => m.OnDisposed);
-            context.Error += (o, e) => FireSynchronousEvent(m => m.OnError);
-            context.PreSendRequestContent += (o, e) => FireSynchronousEvent(m => m.OnPreSendRequestContent);
-            context.PreSendRequestHeaders += (o, e) => FireSynchronousEvent(m => m.OnPreSendRequestHeaders);
+            context.Disposed += (o, e) => FireEventSynchronously(m => m.OnDisposed);
+            context.Error += (o, e) => FireEventSynchronously(m => m.OnError);
+            context.PreSendRequestContent += (o, e) => FireEventSynchronously(m => m.OnPreSendRequestContent);
+            context.PreSendRequestHeaders += (o, e) => FireEventSynchronously(m => m.OnPreSendRequestHeaders);
 
             var session = context.Modules["Session"] as SessionStateModule;
             if (session != null)
             {
-                session.Start += (o, e) => FireSynchronousEvent(m => m.OnSessionStart);
-                session.End += (o, e) => FireSynchronousEvent(m => m.OnSessionEnd);
+                session.Start += (o, e) => FireEventSynchronously(m => m.OnSessionStart);
+                session.End += (o, e) => FireEventSynchronously(m => m.OnSessionEnd);
             }
         }
 
@@ -54,41 +55,41 @@ namespace Modularity
         {
         }
 
-        private void AddAsyncEventHandlers(Action<BeginEventHandler, EndEventHandler, object> addAsyncEvent, Func<ModularityModule, RequestEventHandler> getEvent)
+		private void AddAsyncEventHandlers<TEventArgs>(Action<BeginEventHandler, EndEventHandler, object> addAsyncEvent, Func<ModularityModule, RequestEventHandler<TEventArgs>> getEvent, Func<TEventArgs> getArgs)
+			where TEventArgs : EventArgs
 		{
 			foreach (var handler in Modules.Where(m => m.IsAsync).Select(m => getEvent(m)).Where(e => e != null))
 			{
-				BeginEventHandler begin = (sender, args, callback, state) =>
-				{
-					System.Diagnostics.Debug.WriteLine(string.Format("Async event start. ThreadId: {0}", System.Threading.Thread.CurrentThread.ManagedThreadId));
-					var application = (HttpApplication)sender;
-					var s = new RequestEventState
-					{
-						Context = application.Context,
-						Sender = sender,
-						Handler = (RequestEventHandler)state
-					};
-
-					return Run(s);
-				};
+				BeginEventHandler begin = CreateBeginEventHandler<TEventArgs>(handler, getArgs);
 				EndEventHandler end = result => 
 				{				
-					System.Diagnostics.Debug.WriteLine(string.Format("Async event end. ThreadId: {0}", System.Threading.Thread.CurrentThread.ManagedThreadId));
 				};
 				addAsyncEvent(begin, end, handler);
 			}
         }
 
-		private Task Run(RequestEventState state)
+		private BeginEventHandler CreateBeginEventHandler<TEventArgs>(RequestEventHandler<TEventArgs> handler, Func<TEventArgs> getArgs)
+			where TEventArgs : EventArgs
 		{
-			var task = Task.Factory.StartNew(s =>
+			return (sender, args, callback, state) =>
 				{
-					var requestEventState = (RequestEventState)s;
-					HttpContext.Current = requestEventState.Context;
-					requestEventState.Handler(requestEventState.Sender, new RequestEventArgs(GetContext()));
-				}, state);
-			task.Wait();
-			return task;
+					var application = (HttpApplication)sender;
+					var eventState = new RequestEventState<TEventArgs>
+					{
+						Context = application.Context,
+						Sender = sender,
+						Handler = (RequestEventHandler<TEventArgs>)state,
+						GetEventArgs = getArgs
+					};
+					var task = new Task(s =>
+					{
+						var requestEventState = (RequestEventState<TEventArgs>)s;
+						HttpContext.Current = requestEventState.Context;
+						requestEventState.Handler(requestEventState.Sender, requestEventState.GetEventArgs());
+					}, eventState);
+					task.ContinueWith(t => callback(t));
+					return task;
+				};
 		}
     }
 }

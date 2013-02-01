@@ -7,10 +7,12 @@ using System.Web;
 
 namespace Modularity
 {
-	internal class RequestEventState
+	internal class RequestEventState<TEventArgs>
+		where TEventArgs : EventArgs
 	{
 		internal HttpContext Context { get; set; }
 		internal object Sender { get; set; }
-		internal RequestEventHandler Handler { get; set; }
+		internal RequestEventHandler<TEventArgs> Handler { get; set; }
+		internal Func<TEventArgs> GetEventArgs { get; set; }
 	}
 }
