@@ -50,7 +50,7 @@ namespace Modularity
                     var type = Type.GetType(element.Type);
                     var module = Activator.CreateInstance(type) as ModularityModule;
                     if (module == null) throw new ApplicationException(string.Format("Unable to add {0}. Does it inherit the abstract class Modularity.Module?", element.Type));					
-					//module.IsAsync = element.Async;
+					module.IsAsync = element.Async;
                     Modules.Enqueue(module);
                 }
             }

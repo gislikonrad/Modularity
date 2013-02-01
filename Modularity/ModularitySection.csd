@@ -32,6 +32,11 @@
             <externalTypeMoniker name="/c9f3c23b-b904-4f1e-8960-f3639aaad252/String" />
           </type>
         </attributeProperty>
+        <attributeProperty name="Async" isRequired="false" isKey="false" isDefaultCollection="false" xmlName="async" isReadOnly="false" defaultValue="false">
+          <type>
+            <externalTypeMoniker name="/c9f3c23b-b904-4f1e-8960-f3639aaad252/Boolean" />
+          </type>
+        </attributeProperty>
       </attributeProperties>
     </configurationElement>
   </configurationElements>

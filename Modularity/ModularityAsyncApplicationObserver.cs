@@ -9,7 +9,6 @@ using System.Web.SessionState;
 
 namespace Modularity
 {
-	// TODO: Finish this
     public class ModularityAsyncApplicationObserver : ModularityApplicationObserverBase
 	{
 		protected override bool IsAsync { get { return true; } }
