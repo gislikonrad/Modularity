@@ -15,26 +15,32 @@ namespace Modularity
         internal override void InitializeEvents(HttpApplication context)
         {
             // Async events
-            AddAsyncEventHandlers(context.AddOnAcquireRequestStateAsync, m => m.OnAcquireRequestState, () => new RequestEventArgs(GetContext()));
-			AddAsyncEventHandlers(context.AddOnAuthenticateRequestAsync, m => m.OnAuthenticateRequest, () => new RequestEventArgs(GetContext()));
-			AddAsyncEventHandlers(context.AddOnAuthorizeRequestAsync, m => m.OnAuthorizeRequest, () => new RequestEventArgs(GetContext()));
 			AddAsyncEventHandlers(context.AddOnBeginRequestAsync, m => m.OnBeginRequest, () => new RequestEventArgs(GetContext()));
-			AddAsyncEventHandlers(context.AddOnEndRequestAsync, m => m.OnEndRequest, () => new RequestEventArgs(GetContext()));
-			AddAsyncEventHandlers(context.AddOnLogRequestAsync, m => m.OnLogRequest, () => new RequestEventArgs(GetContext()));
-			AddAsyncEventHandlers(context.AddOnMapRequestHandlerAsync, m => m.OnMapRequestHandler, () => new RequestEventArgs(GetContext()));
-			AddAsyncEventHandlers(context.AddOnPostAcquireRequestStateAsync, m => m.OnPostAcquireRequestState, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnAuthenticateRequestAsync, m => m.OnAuthenticateRequest, () => new RequestEventArgs(GetContext()));
 			AddAsyncEventHandlers(context.AddOnPostAuthenticateRequestAsync, m => m.OnPostAuthenticateRequest, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnAuthorizeRequestAsync, m => m.OnAuthorizeRequest, () => new RequestEventArgs(GetContext()));
 			AddAsyncEventHandlers(context.AddOnPostAuthorizeRequestAsync, m => m.OnPostAuthorizeRequest, () => new RequestEventArgs(GetContext()));
-			AddAsyncEventHandlers(context.AddOnPostLogRequestAsync, m => m.OnPostLogRequest, () => new RequestEventArgs(GetContext()));
-			AddAsyncEventHandlers(context.AddOnPostMapRequestHandlerAsync, m => m.OnPostMapRequestHandler, () => new RequestEventArgs(GetContext()));
-			AddAsyncEventHandlers(context.AddOnPostReleaseRequestStateAsync, m => m.OnPostReleaseRequestState, () => new RequestEventArgs(GetContext()));
-			AddAsyncEventHandlers(context.AddOnPostRequestHandlerExecuteAsync, m => m.OnPostRequestHandlerExecute, () => new RequestEventArgs(GetContext()));
-			AddAsyncEventHandlers(context.AddOnPostResolveRequestCacheAsync, m => m.OnPostResolveRequestCache, () => new RequestEventArgs(GetContext()));
-			AddAsyncEventHandlers(context.AddOnPostUpdateRequestCacheAsync, m => m.OnPostUpdateRequestCache, () => new RequestEventArgs(GetContext()));
-			AddAsyncEventHandlers(context.AddOnPreRequestHandlerExecuteAsync, m => m.OnPreRequestHandlerExecute, () => new RequestEventArgs(GetContext()));
-			AddAsyncEventHandlers(context.AddOnReleaseRequestStateAsync, m => m.OnReleaseRequestState, () => new RequestEventArgs(GetContext()));
 			AddAsyncEventHandlers(context.AddOnResolveRequestCacheAsync, m => m.OnResolveRequestCache, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnPostResolveRequestCacheAsync, m => m.OnPostResolveRequestCache, () => new RequestEventArgs(GetContext()));
+			if (HttpRuntime.UsingIntegratedPipeline)
+			{
+				AddAsyncEventHandlers(context.AddOnMapRequestHandlerAsync, m => m.OnMapRequestHandler, () => new RequestEventArgs(GetContext()));
+			}
+			AddAsyncEventHandlers(context.AddOnPostMapRequestHandlerAsync, m => m.OnPostMapRequestHandler, () => new RequestEventArgs(GetContext()));
+            AddAsyncEventHandlers(context.AddOnAcquireRequestStateAsync, m => m.OnAcquireRequestState, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnPostAcquireRequestStateAsync, m => m.OnPostAcquireRequestState, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnPreRequestHandlerExecuteAsync, m => m.OnPreRequestHandlerExecute, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnPostRequestHandlerExecuteAsync, m => m.OnPostRequestHandlerExecute, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnReleaseRequestStateAsync, m => m.OnReleaseRequestState, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnPostReleaseRequestStateAsync, m => m.OnPostReleaseRequestState, () => new RequestEventArgs(GetContext()));
 			AddAsyncEventHandlers(context.AddOnUpdateRequestCacheAsync, m => m.OnUpdateRequestCache, () => new RequestEventArgs(GetContext()));
+			AddAsyncEventHandlers(context.AddOnPostUpdateRequestCacheAsync, m => m.OnPostUpdateRequestCache, () => new RequestEventArgs(GetContext()));
+			if (HttpRuntime.UsingIntegratedPipeline)
+			{
+				AddAsyncEventHandlers(context.AddOnLogRequestAsync, m => m.OnLogRequest, () => new RequestEventArgs(GetContext()));
+				AddAsyncEventHandlers(context.AddOnPostLogRequestAsync, m => m.OnPostLogRequest, () => new RequestEventArgs(GetContext()));
+			}
+			AddAsyncEventHandlers(context.AddOnEndRequestAsync, m => m.OnEndRequest, () => new RequestEventArgs(GetContext()));
             
             // Synchronous only events
             context.Disposed += (o, e) => FireEventSynchronously(m => m.OnDisposed);
