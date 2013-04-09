@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Modularity")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Create modules for asp.net using a base class that helps you subscribe to application events easier than before and in a unit testable manner.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Gísli Konráð Björnsson")]
 [assembly: AssemblyProduct("Modularity")]
-[assembly: AssemblyCopyright("Copyright ©  2012")]
+[assembly: AssemblyCopyright("Copyright © 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
