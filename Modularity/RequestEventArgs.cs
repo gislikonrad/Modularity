@@ -6,12 +6,19 @@ using System.Web;
 
 namespace Modularity
 {
+	/// <summary>
+	/// Event args for request based events
+	/// </summary>
     public class RequestEventArgs : EventArgs
-    {        
-        public RequestEventArgs(HttpContextBase context)
+    {       
+        internal RequestEventArgs(HttpContextBase context)
         {
             Context = context;
         }
+
+		/// <summary>
+		/// Current HttpContext
+		/// </summary>
         public HttpContextBase Context { get; private set; }
     }
 }

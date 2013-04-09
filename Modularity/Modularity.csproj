@@ -27,6 +27,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Debug\Modularity.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,6 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Release\Modularity.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -50,35 +52,31 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ErrorRequestEventArgs.cs" />
-    <Compile Include="ModularityApplicationObserver.cs" />
-    <Compile Include="ModularityApplicationObserverBase.cs" />
-    <Compile Include="ModularityAsyncApplicationObserver.cs" />
-    <Compile Include="ModularitySection.csd.cs">
+    <Compile Include="GetEventExpressionVisitor.cs" />
+    <Compile Include="Modularity.csd.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ModularitySection.csd</DependentUpon>
+      <DependentUpon>Modularity.csd</DependentUpon>
     </Compile>
+    <Compile Include="ModularityApplicationObserver.cs" />
     <Compile Include="ModularityModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestEventArgs.cs" />
     <Compile Include="MethodHandler.cs" />
     <Compile Include="RequestEventState.cs" />
+    <Compile Include="SynchronousOnlyEventAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ModularitySection.csd">
+    <None Include="Modularity.csd">
       <Generator>CsdFileGenerator</Generator>
-      <LastGenOutput>ModularitySection.csd.cs</LastGenOutput>
+      <LastGenOutput>Modularity.csd.cs</LastGenOutput>
     </None>
-    <None Include="ModularitySection.csd.config">
-      <DependentUpon>ModularitySection.csd</DependentUpon>
+    <None Include="Modularity.csd.config">
+      <DependentUpon>Modularity.csd</DependentUpon>
     </None>
-    <None Include="ModularitySection.csd.diagram">
-      <DependentUpon>ModularitySection.csd</DependentUpon>
-    </None>
-    <None Include="ModularitySection.csd.xsd">
-      <DependentUpon>ModularitySection.csd</DependentUpon>
+    <None Include="Modularity.csd.xsd">
+      <DependentUpon>Modularity.csd</DependentUpon>
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>

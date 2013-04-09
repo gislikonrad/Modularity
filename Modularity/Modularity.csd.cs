@@ -317,31 +317,5 @@ namespace Modularity
             }
         }
         #endregion
-        
-        #region Async Property
-        /// <summary>
-        /// The XML name of the <see cref="Async"/> property.
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("ConfigurationSectionDesigner.CsdFileGenerator", "2.0.1.0")]
-        internal const string AsyncPropertyName = "async";
-        
-        /// <summary>
-        /// Gets or sets the Async.
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("ConfigurationSectionDesigner.CsdFileGenerator", "2.0.1.0")]
-        [global::System.ComponentModel.DescriptionAttribute("The Async.")]
-        [global::System.Configuration.ConfigurationPropertyAttribute(global::Modularity.ModuleElement.AsyncPropertyName, IsRequired=false, IsKey=false, IsDefaultCollection=false, DefaultValue=false)]
-        public virtual bool Async
-        {
-            get
-            {
-                return ((bool)(base[global::Modularity.ModuleElement.AsyncPropertyName]));
-            }
-            set
-            {
-                base[global::Modularity.ModuleElement.AsyncPropertyName] = value;
-            }
-        }
-        #endregion
     }
 }

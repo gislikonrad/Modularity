@@ -76,7 +76,6 @@ namespace Modularity.Test
 			var applicationModules = new IHttpModule[]
 			{
 				new ModularityApplicationObserver(),
-				new ModularityAsyncApplicationObserver()
 			};
 			_observer.InitializeModules(applicationModules);
             _moduleMock.Verify(m => m.Initialize());

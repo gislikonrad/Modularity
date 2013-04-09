@@ -7,14 +7,20 @@ using System.Web;
 
 namespace Modularity
 {
+	/// <summary>
+	/// Event args for error based events
+	/// </summary>
 	public class ErrorRequestEventArgs : RequestEventArgs
 	{
-		public ErrorRequestEventArgs(Exception exception, HttpContextBase context)
+		internal ErrorRequestEventArgs(Exception exception, HttpContextBase context)
 			: base(context)
 		{
 
 		}
 
+		/// <summary>
+		/// The exception that was thrown which triggered the event handler
+		/// </summary>
 		public Exception LastError { private set; get; }
 	}
 }

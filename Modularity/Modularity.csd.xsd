@@ -33,10 +33,5 @@
 				<xs:documentation>The Type.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="async" use="optional" type="xs:boolean">
-			<xs:annotation>
-				<xs:documentation>The Async.</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
 	</xs:complexType>
 </xs:schema>

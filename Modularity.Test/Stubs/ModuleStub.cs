@@ -12,6 +12,11 @@ namespace Modularity.Test.Stubs
 		{
 			Counter++;
 		}
+
+		public override bool IsAsync
+		{
+			get { throw new NotImplementedException(); }
+		}
 	}
 	public class ModuleStub2 : ModularityModule
 	{
@@ -19,6 +24,11 @@ namespace Modularity.Test.Stubs
 		public override void Initialize()
 		{
 			Counter++;
+		}
+
+		public override bool IsAsync
+		{
+			get { throw new NotImplementedException(); }
 		}
 	}
 }
