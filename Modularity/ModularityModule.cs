@@ -146,7 +146,7 @@ namespace Modularity
 		/// On session end. This event can only be fired synchronously.
 		/// </summary>
 		[SynchronousOnlyEvent]
-		public RequestEventHandler<RequestEventArgs> OnSessionEnd;
+		public EventHandler OnSessionEnd;
 
 		/// <summary>
 		/// Global error handler. This event can only be fired synchronously.
@@ -158,7 +158,7 @@ namespace Modularity
 		/// On application end. This event can only be fired synchronously.
 		/// </summary>
 		[SynchronousOnlyEvent]
-		public RequestEventHandler<EventArgs> OnDisposed;
+		public EventHandler OnDisposed;
     }
 
 	/// <summary>

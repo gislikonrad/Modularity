@@ -143,6 +143,19 @@ namespace Modularity
             }
         }
 
+		private void FireEventSynchronously(Expression<Func<ModularityModule, EventHandler>> getEvent)
+		{
+			var iterator = Modules
+					   .Where(m => !m.IsAsync || IsSynchronousOnlyEvent(getEvent))
+					   .Select(m => getEvent.Compile()(m))
+					   .Where(e => e != null);
+
+			foreach (var handler in iterator)
+			{
+				handler(null, EventArgs.Empty);
+			}
+		}
+
 		internal void FireEventSynchronously(Expression<Func<ModularityModule, RequestEventHandler<RequestEventArgs>>> getEvent)
 		{
 			var context = GetContext();
