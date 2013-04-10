@@ -3,11 +3,10 @@ Modularity
 
 Create modules for asp.net using a base class that helps you subscribe to application events easier than before and in a unit testable manner.
 
-Sample
+Samples
 ======
 
-	ModularityModule
-	================
+ModularityModule
 
 	namespace YourApplication.NameSpace
 	{
@@ -50,8 +49,8 @@ Sample
 		}
 	}
 	
-	Web.config
-	==========
+Web.config
+
 	<configuration>
 	  <configSections>
 		<section name="modularity" type="Modularity.ModularitySection, Modularity, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null"/>
