@@ -171,7 +171,7 @@ namespace Modularity
 		{
 			var context = GetContext();
 			var exception = context.Server.GetLastError();
-			context.Server.ClearError();
+			//context.Server.ClearError();
 			FireEventSynchronously<ErrorRequestEventArgs>(getEvent, () => new ErrorRequestEventArgs(exception, context));
 		}
 
