@@ -70,7 +70,7 @@ namespace Modularity
 		public RequestEventHandler<RequestEventArgs> OnPostMapRequestHandler;
 
 		/// <summary>
-		/// Lifecycle event. Happens after OnPostMapRequestHandler and before OnPostAcquireRequestState.
+		/// Lifecycle event. Happens after OnPostMapRequestHandler and before OnPostAcquireRequestState. This is the first event where session state is available.
 		/// </summary>
 		public RequestEventHandler<RequestEventArgs> OnAcquireRequestState;
 
@@ -159,6 +159,13 @@ namespace Modularity
 		/// </summary>
 		[SynchronousOnlyEvent]
 		public EventHandler OnDisposed;
+		
+		/// <summary>
+		/// (\/) (°,,,°) (\/)
+		/// </summary>
+		protected void Berg()
+		{
+		}
     }
 
 	/// <summary>
