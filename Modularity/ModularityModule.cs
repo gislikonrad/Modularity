@@ -162,7 +162,9 @@ namespace Modularity
 		public EventHandler OnDisposed;
 		
 		/// <summary>
-		/// (\/) (°,,,°) (\/)
+		/// Need a method? Why not void Berg?
+		/// <para>(\/) (°,,,°) (\/)</para>
+		/// <para>Woop woop woop!</para>
 		/// </summary>
 		protected void Berg()
 		{
