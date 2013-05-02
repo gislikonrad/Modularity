@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -165,6 +166,8 @@ namespace Modularity
 		/// </summary>
 		protected void Berg()
 		{
+			Debug.WriteLine(@"(\/) (°,,,°) (\/)");
+			Debug.WriteLine("Yaaaaay! I'm useful!");
 		}
     }
 
