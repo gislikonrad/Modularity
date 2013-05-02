@@ -162,14 +162,24 @@ namespace Modularity
 		public EventHandler OnDisposed;
 		
 		/// <summary>
-		/// Need a method? Why not void Berg?
-		/// <para>(\/) (°,,,°) (\/)</para>
+		/// <para>Need a method?</para>
+		/// <para>(\/) (;,,;) (\/)</para>
+		/// <para>Why not void Berg?</para>
 		/// <para>Woop woop woop!</para>
 		/// </summary>
 		protected void Berg()
 		{
-			Debug.WriteLine(@"(\/) (°,,,°) (\/)");
-			Debug.WriteLine("Yaaaaay! I'm useful!");
+			var zoidberg = new[]
+				{
+					"Hooray! I'm useful! I'm having a wonderful time.",
+					"Fry, it's been years since medical school, so remind me. Disemboweling in your species, fatal or non-fatal?",
+					"Now open your mouth and lets have a look at that brain.",
+					"I don't trust that doctor. I bet I've lost more patients than he's even treated.",
+					"Now I'm not saying Professor Farnsworth is old, but if you consider his age he's likely to die soon."
+				};
+			var random = new Random();
+			var index = random.Next(0, zoidberg.Length);
+			Debug.WriteLine(zoidberg[index]);
 		}
     }
 
