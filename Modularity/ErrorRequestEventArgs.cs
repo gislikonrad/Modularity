@@ -15,7 +15,7 @@ namespace Modularity
 		internal ErrorRequestEventArgs(Exception exception, HttpContextBase context)
 			: base(context)
 		{
-
+			LastError = exception;
 		}
 
 		/// <summary>
