@@ -136,6 +136,7 @@ namespace Modularity
                 foreach (var element in elements)
                 {
                     var type = Type.GetType(element.Type);
+					if (type == null) throw new ApplicationException(string.Format("Unable to find type {0}. Is there a typo in the type declaration?", element.Type));										
                     var module = Activator.CreateInstance(type) as ModularityModule;
                     if (module == null) throw new ApplicationException(string.Format("Unable to add {0}. Does it inherit the abstract class Modularity.ModularityModule?", element.Type));										
                     Modules.Enqueue(module);
